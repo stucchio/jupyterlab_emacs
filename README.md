@@ -1,6 +1,9 @@
 # jupyterlab_emacs
 
-A JupyterLab extension allowing one to edit individual cell contents in jupyter.
+A JupyterLab extension allowing one to edit individual cell contents in jupyter. This is dependent on
+the [edit-server](https://github.com/stsquad/emacs_chrome/blob/master/servers/edit-server.el) package
+for Emacs, which also allows you to do similar things from Chrome/Firefox (but crucially, not from fancy
+textareas like those in Jupyter).
 
 ## JupterLab Version
 The extension has been tested up to JupyterLab version 2.0.0.
@@ -104,3 +107,7 @@ To rebuild the package and the JupyterLab app:
 npm run build
 jupyter lab build
 ```
+
+## Credits
+
+Written by [Chris Stucchio](mailto:hi@chrisstucchio.com), and based on code from [Jupyterlab Spellchecker](https://github.com/ijmbarr/jupyterlab_spellchecker) which I took as a template.
