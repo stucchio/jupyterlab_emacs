@@ -16,7 +16,6 @@ import {
 } from '@jupyterlab/apputils';
 
 
-import '../style/index.css';
 const http = require('http');
 
 declare function require(name:string): any;
@@ -45,14 +44,6 @@ class EditWithEmacs {
         this.palette = palette;
         this.setup_button();
 
-        this.editor_tracker.widgetAdded.connect((sender, widget) => {
-            let file_editor = widget.content;
-
-            if (this.accepted_types.indexOf(file_editor.model.mimeType) !== -1) {
-                console.log("widget added")
-                console.log(this.extract_editor(file_editor).getValue());
-            }
-        });
     }
 
 
@@ -118,7 +109,7 @@ function activate(app: JupyterFrontEnd, tracker: INotebookTracker, palette: ICom
  * Initialization data for the jupyterlab_spellchecker extension.
  */
 const extension: JupyterFrontEndPlugin<void> = {
-    id: 'jupyterlab_spellchecker',
+    id: 'jupyterlab_emacs',
     autoStart: true,
     requires: [INotebookTracker, ICommandPalette, IEditorTracker],
     activate: activate
