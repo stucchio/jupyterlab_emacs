@@ -1,5 +1,5 @@
 {
-  "name": "@ijmbarr/jupyterlab_emacs",
+  "name": "@stucchio/jupyterlab_emacs",
   "version": "0.0.1",
   "description": "Edit jupyter cells with emacs",
   "keywords": [
@@ -7,20 +7,20 @@
     "jupyterlab",
     "jupyterlab-extension"
   ],
-  "homepage": "https://github.com/ijmbarr/jupyterlab_spellchecker",
+  "homepage": "https://github.com/stucchio/jupyterlab_emacs",
   "bugs": {
-    "url": "https://github.com/ijmbarr/jupyterlab_spellchecker"
+    "url": "https://github.com/stucchio/jupyterlab_emacs"
   },
   "license": "BSD-3-Clause",
   "author": "Chris Stucchio",
   "files": [
-    "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}"
+      "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}"
   ],
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ijmbarr/jupyterlab_spellchecker"
+    "url": "https://github.com/stucchio/jupyterlab_emacs"
   },
   "scripts": {
     "build": "tsc",
