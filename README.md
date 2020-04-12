@@ -18,52 +18,15 @@ jupyter labextension install @stucchio/jupyterlab_emacs
 
 ### Setting up emacs
 
-To configure emacs, we must use the package `edit-server`. However if we use the unmodified package, then
-many browsers will raise a CORS error when jupyter attempts to trigger emacs. We can modify this by redefining
-one of the functions used in `edit-server`, namely `edit-server-send-response`.
+To configure emacs, we must use the package `edit-server`. We also need to customize this package slightly,
+so after installing it you must place the file `edit_server_jupyterlab.el` someplace that emacs can find it.
 
-A [ticket](https://github.com/stsquad/emacs_chrome/issues/164) has been submitted to `edit-server` notifying them of this fix.
+Next up, put the following into your `.emacs.d/init.el` file:
 
 ```elisp
 (require 'edit-server)
 (edit-server-start)
-
-;; Redefine edit-server-send-response to allow CORS
-(defun edit-server-send-response (proc &optional body progress)
-  "send an HTTP 200 OK response back to process PROC.
-Optional second argument BODY specifies the response content:
-    - If nil, the HTTP response will have null content.
-    - If a string, the string is sent as response content.
-    - Any other value will cause the contents of the current
-      buffer to be sent.
-If optional third argument progress is non-nil, then the response
-will include x-file and x-open headers to allow continuation of editing."
-  (interactive)
-  (edit-server-log proc "sending edit-server response")
-  (if (processp proc)
-      (let ((response-header (concat
-			      "HTTP/1.0 200 OK\n"
-			      (format "Server: Emacs/%s\n" emacs-version)
-			      "Date: "
-			      (format-time-string
-			       "%a, %d %b %Y %H:%M:%S GMT\n"
-			       (current-time))
-                              "Access-Control-Allow-Origin: *\n"
-                              "Access-Control-Allow-Headers: *\n"
-			      (when progress
-				(format "x-file: %s\nx-open: true\n" (buffer-name))))))
-	(process-send-string proc response-header)
-	(process-send-string proc "\n")
-	(cond
-	 ((stringp body)
-	  (process-send-string proc (encode-coding-string body 'utf-8)))
-	 ((not body) nil)
-	 (t
-	  (encode-coding-region (point-min) (point-max) 'utf-8)
-	  (process-send-region proc (point-min) (point-max))))
-	(process-send-eof proc)
-	(edit-server-log proc "Editing done, sent HTTP OK response."))
-    (message "edit-server-send-response: invalid proc (bug?)")))
+(load-file "path_to_edit_server_jupyterlab.el")
 ```
 
 
