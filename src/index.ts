@@ -52,42 +52,48 @@ class EditWithEmacs {
         return editor_temp._editor;
     }
 
+    trigger_emacs(editor: any, cell_type: string) {
+        let cell_text = editor.getValue();
+        console.log("sending " + cell_text + " to emacs");
+        let http_options = {
+            'host': '127.0.0.1',
+            'port': 9292,
+            'path': '/edit',
+            'method': 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': cell_text.length,
+                'x-file': 'jupyterhub:' + cell_type
+            }
+        };
+
+        let request = http.request(http_options, (res: any) => {
+            var body = '';
+            res.on('data', (chunk: string) => {
+                body += chunk;
+            });
+            res.on('end', () => {
+                console.log("request finished");
+                console.log(body);
+                editor.setValue(body);
+            });
+        }).on('error', (e: any) => {
+            console.log("Got error: " + e.message);
+            console.log(e)
+        });
+        request.write(cell_text);
+        request.end();
+    }
+
     setup_button(){
         const command = "externaleditor:edit-in-emacs";
         this.app.commands.addCommand(command,{
             label: "Edit in emacs",
             execute: () => {
                 console.log("Clicked button")
-                let editor = this.extract_editor(this.tracker.activeCell);
-                let cell_text = editor.getValue();
-                console.log("sending " + cell_text + " to emacs");
-                let http_options = {
-                    'host': '127.0.0.1',
-                    'port': 9292,
-                    'path': '/edit',
-                    'method': 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Content-Length': cell_text.length
-                    }
-                };
-
-                let request = http.request(http_options, (res: any) => {
-                    var body = '';
-                    res.on('data', (chunk: string) => {
-                        body += chunk;
-                    });
-                    res.on('end', () => {
-                        console.log("request finished");
-                        console.log(body);
-                        editor.setValue(body);
-                    });
-                }).on('error', (e: any) => {
-                    console.log("Got error: " + e.message);
-                    console.log(e)
-                });
-                request.write(cell_text);
-                request.end();
+                let active_cell = this.tracker.activeCell;
+                let editor = this.extract_editor(active_cell);
+                this.trigger_emacs(editor, active_cell.model.type);
             }
         });
         this.palette.addItem( {command, category: "External editor"} );
